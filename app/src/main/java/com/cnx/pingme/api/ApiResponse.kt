@@ -1,6 +1,5 @@
 package com.cnx.pingme.api
 
-import android.util.Log
 import com.google.gson.GsonBuilder
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -46,7 +45,6 @@ sealed class ApiResponse<T> {
             } else {
 
                 val msg = response.errorBody()?.deserialize<ErrorModel>()?.errMsg
-                Log.d("ErrorMessage","msg $msg")
                 val errorMsg = if (msg.isNullOrEmpty()) {
                     response.message()
                 } else {

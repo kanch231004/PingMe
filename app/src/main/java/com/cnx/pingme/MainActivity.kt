@@ -2,7 +2,6 @@ package com.cnx.pingme
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -43,8 +42,8 @@ class MainActivity : AppCompatActivity() {
                 sendAndReceiveMsg(message)
             }
         }
-        initRvAdapter()
 
+        initRvAdapter()
 
     }
 
@@ -92,8 +91,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUI(message : Message?) {
-
-        Log.d("MainActivity", "updated msg ${message?.message}")
 
         message?.let {
 
