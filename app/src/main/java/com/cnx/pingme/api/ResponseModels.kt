@@ -22,10 +22,10 @@ data class Message(
     @SerializedName("chatBotID")
     var chatBotID: Int?,
     @SerializedName("chatBotName")
-    var chatBotName: String? = "",
+    var chatBotName: String?,
     @SerializedName("emotion")
     var emotion: String?,
     @SerializedName("message")
-    var message: String? = "",
+    var message: String?,
     var isSent : Boolean = false
 )

@@ -19,8 +19,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitFactory {
 
-    val retrofit: Retrofit? = null
-    val BASE_URL = "https://www.personalityforge.com"
+    const val BASE_URL = "https://www.personalityforge.com"
 
     fun getRetrofitClient() : ChatService {
 
