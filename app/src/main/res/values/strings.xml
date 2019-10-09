@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PingMe</string>
+    <string name="type_a_message">Type a message</string>
+</resources>
