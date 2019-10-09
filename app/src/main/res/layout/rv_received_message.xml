@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ll_received_message_background"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:id="@+id/llMessageContainer"
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:paddingStart="@dimen/spacing_large"
+        android:paddingEnd="@dimen/spacing_large">
+
+        <TextView
+            android:id="@+id/tvSenderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:text="Name"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginStart="@dimen/spacing_small"
+
+            android:textSize="@dimen/text_small"
+            tools:visibility="visible"/>
+
+
+
+        <TextView
+            android:id="@+id/tvSenderMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            tools:text="Some msg"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>
