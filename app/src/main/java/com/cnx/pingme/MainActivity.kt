@@ -78,8 +78,6 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
-
-
         var actionBarToggle = object : ActionBarDrawerToggle(this
             ,drawerLayout , toolbar, R.string.opened, R.string.closed) {
 
@@ -99,13 +97,13 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
             when (it.itemId) {
 
-                R.id.tom -> { userSession = SESSION_TOM }
+                R.id.tom -> { userSession = SESSION_TOM ; ivProfile.setImageResource(R.drawable.pic_tom) }
 
-                R.id.bob -> { userSession = SESSION_BOB }
+                R.id.bob -> { userSession = SESSION_BOB ; ivProfile.setImageResource(R.drawable.pic_bob)}
 
-                R.id.harry -> { userSession = SESSION_HARRY }
+                R.id.jennifer -> { userSession = SESSION_JENNI ; ivProfile.setImageResource(R.drawable.pic_jennifer)}
 
-                R.id.mark -> { userSession = SESSION_MARK }
+                R.id.mark -> { userSession = SESSION_MARK ; ivProfile.setImageResource(R.drawable.pic_mark)}
 
             }
 
@@ -141,6 +139,7 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
             chatRVAdapter.submitList(it)
 
             Log.d("count","${it.size}")
+            if (it.size > 0)
             rvMsg.smoothScrollToPosition(it.size -1)
 
 

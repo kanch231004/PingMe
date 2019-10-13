@@ -3,9 +3,9 @@
     <string name="type_a_message">Type a messageModel</string>
     <string name="tom">Tom</string>
     <string name="bob">Bob</string>
-    <string name="harry">Harry</string>
+    <string name="mark">Mark</string>
     <string name="opened">opened</string>
     <string name="closed">closed</string>
-    <string name="mark">Mark</string>
+    <string name="jennifer">Jennifer</string>
     <string name="some_name">Bob</string>
 </resources>
