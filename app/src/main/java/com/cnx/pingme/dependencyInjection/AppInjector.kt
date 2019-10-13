@@ -16,9 +16,12 @@ import dagger.android.support.HasSupportFragmentInjector
  */
 object AppInjector {
 
+    lateinit var appComponent: AppComponent
+
     fun init(application: PingMeApp) {
 
-        DaggerAppComponent.builder().application(application).build().inject(application)
+        appComponent = DaggerAppComponent.builder().application(application).build()
+        appComponent.inject(application)
 
         application
             .registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {

@@ -79,4 +79,8 @@ dependencies {
     implementation "com.facebook.stetho:stetho:$rootProject.stetho"
     implementation "com.facebook.stetho:stetho-okhttp3:$rootProject.stetho"
 
+
+    implementation "com.birbit:android-priority-jobqueue:$priorityJobQueueVersion"
+    implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"
+
 }

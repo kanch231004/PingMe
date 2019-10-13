@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import androidx.work.*
 import com.cnx.pingme.api.BaseDataSource
 import com.cnx.pingme.api.ChatService
 import com.cnx.pingme.api.MessageModel
-import com.cnx.pingme.api.Result
+import com.cnx.pingme.utils.MSG_KEY
+import com.cnx.pingme.worker.SendMsgWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,35 +18,27 @@ import javax.inject.Singleton
 
 @Singleton
 class ChatRepository @Inject constructor(private val chatDao: ChatDao,
-                                         private val chatService: ChatService) : BaseDataSource() {
-
+                                         private val chatService: ChatService,
+                                         private val workManager: WorkManager) : BaseDataSource() {
 
 
      fun sendAndReceiveChat(sentMsgModel: MessageModel, coroutineScopeIO: CoroutineScope){
 
-         Log.d("sendMsg","${sentMsgModel.toString()}")
-        coroutineScopeIO.launch {
 
+        coroutineScopeIO.launch {
 
             insertChat(sentMsgModel)
+
+            addRequestInQueue(sentMsgModel)
         }
 
-        coroutineScopeIO.launch {
+    }
 
-            val result =  getResult { chatService.getChats(sentMsgModel.userSession,sentMsgModel.message ?: "") }
-            Log.d("messageModel","${result.data?.messageModel}")
 
-            if (result.status == Result.Status.SUCCESS) {
+    fun addRequestInQueue(messageModel: MessageModel) {
 
-                val receiveMsgModel = result.data?.messageModel
-                receiveMsgModel?.userSession = sentMsgModel?.userSession
-
-                Log.d("messageModel","${receiveMsgModel.toString()}")
-                insertChat(receiveMsgModel)
-
-            }
-
-        }
+        Log.d("Offline","add in request")
+        createWorkRequest(messageModel)
     }
 
 
@@ -65,6 +59,33 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
 
             session ->
         LivePagedListBuilder(chatDao.getMessageForId(session),config).build()
+    }
+
+    fun createWorkRequest(messageModel: MessageModel) {
+
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+
+        val stringArray : Array<String> = arrayOf<String>(messageModel.chatBotName!!, messageModel.userSession,messageModel.message!!)
+
+        val externalId = workDataOf(
+            MSG_KEY to stringArray)
+
+        Log.d("Worker Sent","externalID ${messageModel.chatBotName} message ${messageModel.message} userSession ${messageModel.message}")
+
+        val sendMsgRequest = OneTimeWorkRequestBuilder<SendMsgWorker>()
+            .setConstraints(constraints).
+
+                setInputData(externalId)
+                /*.setInputData(userSession)
+               .setInputData(messageContent)*/.build()
+
+
+        workManager?.enqueue(sendMsgRequest)
+
     }
 
 

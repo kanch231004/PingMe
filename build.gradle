@@ -26,6 +26,10 @@ buildscript {
         stetho = '1.5.1'
         timberVersion = '4.7.1'
 
+        priorityJobQueueVersion = "2.0.1"
+        workVersion = '2.1.0-alpha02'
+
+
 
     }
     repositories {

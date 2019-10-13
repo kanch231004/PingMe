@@ -2,6 +2,7 @@ package com.cnx.pingme.dependencyInjection
 
 import android.app.Application
 import com.cnx.pingme.PingMeApp
+import com.cnx.pingme.worker.SendMsgWorker
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -25,4 +26,6 @@ interface AppComponent {
     }
 
     fun inject(application: PingMeApp)
+
+    fun injectIntoWorker(worker: SendMsgWorker)
 }
