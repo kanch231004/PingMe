@@ -20,8 +20,9 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_nav_header.*
+import java.util.*
 import javax.inject.Inject
-
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
             if(!TextUtils.isEmpty(etMessage.editableText)) {
 
-                val message = MessageModel(userSession,
+                val message = MessageModel(UUID.randomUUID().toString(),userSession,
                     CHATBOT_ID, USER_NAME,"",
                     etMessage.editableText.toString(),true)
 

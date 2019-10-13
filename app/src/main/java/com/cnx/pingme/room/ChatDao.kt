@@ -16,4 +16,7 @@ interface ChatDao {
 
     @Query("SELECT * From MessageModel Where userSession = :userSess")
     fun getMessageForId(userSess : String) : DataSource.Factory<Int,MessageModel>
+
+    @Query("Update MessageModel SET isSuccess = :isSuccess Where id = :msgId")
+    fun updateChat(isSuccess : Boolean, msgId: Int)
 }

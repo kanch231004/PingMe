@@ -19,6 +19,8 @@ class ChatVH(itemView: View) : RecyclerView.ViewHolder(itemView ) {
 
                 tvMessage.text = messageModel.message
                 tvName.text = messageModel.chatBotName
+                tvFailed.visibility = if (messageModel.isSuccess) View.GONE else View.VISIBLE
+
             } else {
                 tvSenderMessage.text = messageModel.message
                 tvSenderName.text = messageModel.userSession

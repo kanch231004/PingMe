@@ -35,7 +35,7 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
 
     fun addRequestInQueue(messageModel: MessageModel) {
 
-        Log.d("Offline","add in request")
+        Log.d("Offline","add in request msgId ${messageModel.id}")
         createWorkRequest(messageModel)
     }
 
@@ -67,12 +67,13 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
             .build()
 
 
-        val stringArray : Array<String> = arrayOf<String>(messageModel.chatBotName!!, messageModel.userSession,messageModel.message!!)
+        val stringArray : Array<String> = arrayOf<String>(messageModel.chatBotName!!,
+            messageModel.userSession,messageModel.message!!, messageModel.id!!.toString())
 
         val externalId = workDataOf(
             MSG_KEY to stringArray)
 
-        Log.d("Worker Sent","externalID ${messageModel.chatBotName} message ${messageModel.message} userSession ${messageModel.message}")
+        Log.d("Worker Sent","externalID ${messageModel.chatBotName} message ${messageModel.message} userSession ${messageModel.userSession}")
 
         val sendMsgRequest = OneTimeWorkRequestBuilder<SendMsgWorker>()
             .setConstraints(constraints).
@@ -81,6 +82,7 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
 
 
         workManager.enqueue(sendMsgRequest)
+
 
     }
 

@@ -20,6 +20,8 @@ data class ChatResponse(
 @Entity
 data class MessageModel(
 
+    @PrimaryKey
+    var id : String ,
     var userSession : String,
 
     @SerializedName("chatBotID")
@@ -30,8 +32,6 @@ data class MessageModel(
     var emotion: String?,
     @SerializedName("message")
     var message: String?,
-    var isSent : Boolean = false
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id : Int = 0
-}
+    var isSent : Boolean = false,
+    var isSuccess : Boolean = true
+)

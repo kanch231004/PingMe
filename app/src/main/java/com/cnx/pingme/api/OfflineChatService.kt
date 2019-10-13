@@ -1,5 +1,6 @@
 package com.cnx.pingme.api
 
+import com.cnx.pingme.utils.APIKEY
 import com.cnx.pingme.utils.CHATBOT_ID
 import retrofit2.Call
 import retrofit2.http.GET
@@ -18,6 +19,6 @@ interface OfflineChatService {
 
     @GET("api/chat/")
     fun getChats(@Query("externalID") externalId : String, @Query("message") message : String,
-                         @Query("chatBotID") chatBotID : Int = CHATBOT_ID, @Query("apiKey") apiKey : String = apiKeyValue
+                         @Query("chatBotID") chatBotID : Int = CHATBOT_ID, @Query(APIKEY) apiKey : String = apiKeyValue
     ) : Call<ChatResponse>
 }

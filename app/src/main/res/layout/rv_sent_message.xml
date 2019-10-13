@@ -3,8 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-
     android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/tvFailed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_failed_red_24dp"
+        android:drawablePadding="@dimen/spacing_medium"
+        android:text="@string/failed"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_marginEnd="@dimen/spacing_large"
+        android:layout_toStartOf="@+id/llMessageContainer"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -13,6 +26,7 @@
         android:background="@drawable/ll_sent_message_background"
         android:id="@+id/llMessageContainer"
         android:orientation="vertical"
+
         android:layout_marginBottom="@dimen/spacing_medium"
         android:gravity="center_vertical|end"
         android:paddingStart="@dimen/spacing_large"
