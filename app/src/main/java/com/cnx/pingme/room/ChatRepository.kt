@@ -7,7 +7,6 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.work.*
 import com.cnx.pingme.api.BaseDataSource
-import com.cnx.pingme.api.ChatService
 import com.cnx.pingme.api.MessageModel
 import com.cnx.pingme.utils.MSG_KEY
 import com.cnx.pingme.worker.SendMsgWorker
@@ -18,7 +17,6 @@ import javax.inject.Singleton
 
 @Singleton
 class ChatRepository @Inject constructor(private val chatDao: ChatDao,
-                                         private val chatService: ChatService,
                                          private val workManager: WorkManager) : BaseDataSource() {
 
 
@@ -79,12 +77,10 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
         val sendMsgRequest = OneTimeWorkRequestBuilder<SendMsgWorker>()
             .setConstraints(constraints).
 
-                setInputData(externalId)
-                /*.setInputData(userSession)
-               .setInputData(messageContent)*/.build()
+                setInputData(externalId).build()
 
 
-        workManager?.enqueue(sendMsgRequest)
+        workManager.enqueue(sendMsgRequest)
 
     }
 

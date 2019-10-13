@@ -124,7 +124,11 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
     private fun sendAndReceiveMsg(messageModel: MessageModel) {
 
         Log.d("SendAndReceive"," in Activity ${messageModel.userSession}")
-        chatViewModel.sendAndReceiveChat(messageModel)
+
+       // if (isConnected(applicationContext))
+            chatViewModel.sendAndReceiveChat(messageModel)
+
+      //  else chatViewModel.addWorkInQueue(messageModel)
 
     }
 
