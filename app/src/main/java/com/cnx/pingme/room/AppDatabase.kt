@@ -21,7 +21,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-        // For Singleton instantiation
         @Volatile
         private var instance: AppDatabase? = null
 
@@ -30,8 +29,6 @@ abstract class AppDatabase : RoomDatabase() {
                 instance ?: buildDatabase(context).also { instance = it }
             }
         }
-
-        // Create and pre-populate the database. See this article for more details:
 
         private fun buildDatabase(context: Context): AppDatabase {
 

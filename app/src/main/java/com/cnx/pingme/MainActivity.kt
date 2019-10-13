@@ -2,7 +2,6 @@ package com.cnx.pingme
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -67,7 +66,7 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
                     etMessage.editableText.toString(),true)
 
                 etMessage.setText("")
-                sendAndReceiveMsg(message)
+                chatViewModel.sendAndReceiveChat(message)
             }
         }
 
@@ -117,32 +116,12 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
     }
 
 
-
-
-
-
-    private fun sendAndReceiveMsg(messageModel: MessageModel) {
-
-        Log.d("SendAndReceive"," in Activity ${messageModel.userSession}")
-
-       // if (isConnected(applicationContext))
-            chatViewModel.sendAndReceiveChat(messageModel)
-
-      //  else chatViewModel.addWorkInQueue(messageModel)
-
-    }
-
     private fun getChats() {
-
 
         chatViewModel.chatList.observe(this, Observer {
 
-            Log.d("value changed","$it")
-
-
             chatRVAdapter.submitList(it)
 
-            Log.d("count","${it.size}")
             if (it.size > 0)
             rvMsg.smoothScrollToPosition(it.size -1)
 

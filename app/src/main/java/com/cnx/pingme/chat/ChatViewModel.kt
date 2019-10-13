@@ -19,14 +19,10 @@ class ChatViewModel @Inject constructor(private val chatRepository: ChatReposito
         chatRepository.sendAndReceiveChat(messageModel,ioCoroutineScope)
     }
 
+
     var userSessionLd : MutableLiveData<String> = MutableLiveData()
 
     val chatList = chatRepository.getChatList(userSessionLd)
-
-
-    fun getUserSession() = userSessionLd
-
-
 
 
 

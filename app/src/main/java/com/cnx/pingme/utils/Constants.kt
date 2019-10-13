@@ -14,9 +14,5 @@ const val SESSION_BOB = "Bob"
 const val SESSION_MARK = "Mark"
 const val SESSION_JENNI = "Jennifer"
 
-const val EXTERNAL_ID = "externalId"
-const val MESSAGE_CONTENT = "msgContent"
-const val USER_SESSION = "userSession"
-
 const val MSG_KEY = "msgKey"
 

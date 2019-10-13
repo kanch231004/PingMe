@@ -2,7 +2,6 @@ package com.cnx.pingme.dependencyInjection
 
 import android.app.Application
 import androidx.work.WorkManager
-import com.cnx.pingme.api.ChatService
 import com.cnx.pingme.api.OfflineChatService
 import com.cnx.pingme.room.AppDatabase
 import dagger.Module
@@ -17,12 +16,6 @@ import javax.inject.Singleton
 
 @Module(includes = [ViewModelModule::class, CoreDataModule::class])
 class AppModule {
-
-    @Singleton
-    @Provides
-    fun provideChatService(@ChatApi okhttpClient: OkHttpClient,
-                           converterFactory: GsonConverterFactory
-    ) = provideService(okhttpClient, converterFactory, ChatService::class.java)
 
 
     @Singleton
@@ -61,17 +54,13 @@ class AppModule {
             converterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(ChatService.ENDPOINT)
+                .baseUrl(OfflineChatService.ENDPOINT)
 
                 .client(okhttpClient)
                 .addConverterFactory(converterFactory)
                 .build()
     }
 
-    private fun <T> provideService(okhttpClient: OkHttpClient,
-            converterFactory: GsonConverterFactory, clazz: Class<T>): T {
-        return createRetrofit(okhttpClient, converterFactory).create(clazz)
-    }
 
     @Singleton
     fun  <T> providesOfflineService(okhttpClient: OkHttpClient,converterFactory: GsonConverterFactory,clazz: Class<T>) : T {
@@ -81,7 +70,6 @@ class AppModule {
 
     @Provides
     fun provideWorkManager(app : Application) = WorkManager.getInstance(app)
-
 
 
 

@@ -44,7 +44,7 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
 
             messageModel?.let {
                 chatDao.insertChat(messageModel)
-            }
+       }
     }
 
 
