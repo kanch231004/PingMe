@@ -3,6 +3,7 @@ package com.cnx.pingme
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -19,6 +20,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_nav_header.*
 import javax.inject.Inject
 
 
@@ -76,8 +78,17 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
-        var actionBarToggle = ActionBarDrawerToggle(this
-            ,drawerLayout , toolbar, R.string.opened, R.string.closed)
+
+
+        var actionBarToggle = object : ActionBarDrawerToggle(this
+            ,drawerLayout , toolbar, R.string.opened, R.string.closed) {
+
+            override fun onDrawerOpened(drawerView: View) {
+                super.onDrawerOpened(drawerView)
+                tvSelectedName.text = userSession
+            }
+
+        }
 
         drawerLayout.addDrawerListener(actionBarToggle)
         actionBarToggle.syncState()
@@ -100,6 +111,7 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
             chatViewModel.userSessionLd.postValue(userSession)
             toolbar.title = userSession
+            tvSelectedName.text = userSession
 
             return@setNavigationItemSelectedListener  true
         }
@@ -107,16 +119,7 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
     }
 
 
-    private fun setupChat() {
 
-        chatViewModel.getUserSession()?.observe(this, Observer {
-
-            Log.d("session","changed with value $it")
-             userSession = it
-             toolbar.title = userSession
-             getChats()
-        })
-    }
 
 
 
@@ -130,7 +133,6 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
     private fun getChats() {
 
 
-//        this.userSession= userSession
         chatViewModel.chatList.observe(this, Observer {
 
             Log.d("value changed","$it")
