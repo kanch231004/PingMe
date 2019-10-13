@@ -1,24 +1,27 @@
 package com.cnx.pingme.api
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
 
-
-data class ErrorModel(@Expose @SerializedName("message") var errMsg : String)
+data class ErrorModel(@Expose @SerializedName("messageModel") var errMsg : String)
 
 data class ChatResponse(
-    @SerializedName("data")
-    var `data`: List<Message?>?,
     @SerializedName("errorMessage")
     var errorMessage: String?,
     @SerializedName("message")
-    var message: Message?,
+    var messageModel: MessageModel?,
     @SerializedName("success")
     var success: Int
 )
 
-data class Message(
+@Entity
+data class MessageModel(
+
+    var userSession : String,
+
     @SerializedName("chatBotID")
     var chatBotID: Int?,
     @SerializedName("chatBotName")
@@ -28,4 +31,7 @@ data class Message(
     @SerializedName("message")
     var message: String?,
     var isSent : Boolean = false
-)
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id : Int = 0
+}

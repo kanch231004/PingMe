@@ -54,4 +54,11 @@ open class BaseRvAdapter<M,H : RecyclerView.ViewHolder> (private val context: Co
         return items[position]
     }
 
+    fun clear() {
+
+        items.clear()
+        notifyDataSetChanged()
+
+    }
+
 }

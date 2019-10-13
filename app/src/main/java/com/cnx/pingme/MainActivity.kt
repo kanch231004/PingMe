@@ -2,103 +2,151 @@ package com.cnx.pingme
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.widget.Toast
+import android.util.Log
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cnx.pingme.api.ApiErrorResponse
-import com.cnx.pingme.api.ApiSuccessResponse
-import com.cnx.pingme.api.Message
-import com.cnx.pingme.chat.ChatVH
+import com.cnx.pingme.api.MessageModel
+import com.cnx.pingme.chat.ChatAdapter
 import com.cnx.pingme.chat.ChatViewModel
+import com.cnx.pingme.dependencyInjection.injectViewModel
 import com.cnx.pingme.utils.*
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
 
+
+class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment>  = dispatchingAndroidInjector
+
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var drawerLayout : DrawerLayout
     private lateinit var chatViewModel: ChatViewModel
+    private  var userSession : String = SESSION_BOB
+    private lateinit var chatRVAdapter : ChatAdapter
 
-    private lateinit var chatRVAdapter : BaseRvAdapter<Message,ChatVH>
+    private var messages = ArrayList<MessageModel>()
 
-    private var messages = ArrayList<Message>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chatViewModel = ViewModelProviders.of(this).get(ChatViewModel::class.java)
+
+        chatViewModel = injectViewModel(viewModelFactory)
+        chatViewModel.userSessionLd.postValue(userSession)
+        getChats()
+        setSupportActionBar(toolbar)
+        toolbar.title = userSession
+
+        setUpNavigation()
+
+        rvMsg.layoutManager = LinearLayoutManager(this)
+        chatRVAdapter = ChatAdapter()
+        rvMsg.adapter = chatRVAdapter
 
         fabSend.setOnClickListener {
 
             if(!TextUtils.isEmpty(etMessage.editableText)) {
 
-                val message = Message(
-                    CHATBOT_ID, CHATBOT_NAME,"",
+                val message = MessageModel(userSession,
+                    CHATBOT_ID, USER_NAME,"",
                     etMessage.editableText.toString(),true)
+
                 etMessage.setText("")
-                chatRVAdapter.addItem(message)
-                rvMsg.smoothScrollToPosition(chatRVAdapter.itemCount-1)
                 sendAndReceiveMsg(message)
             }
         }
 
-        initRvAdapter()
 
     }
 
-    private fun initRvAdapter() {
+    private fun setUpNavigation() {
 
-        chatRVAdapter = BaseRvAdapter(this,{
-            index ->
-                if (messages[index].isSent)
-                    SENT_MESSAGE
-                else
-                    RECEIVED_MESSAGE
-        },{
-            view -> ChatVH(view)
-        },messages,{
-            holder , message, position ->
-                holder.bind(message)
-        })
+        drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
-        rvMsg.layoutManager = LinearLayoutManager(this)
-        rvMsg.adapter = chatRVAdapter
+        var actionBarToggle = ActionBarDrawerToggle(this
+            ,drawerLayout , toolbar, R.string.opened, R.string.closed)
 
-    }
+        drawerLayout.addDrawerListener(actionBarToggle)
+        actionBarToggle.syncState()
 
+        nav_view.setNavigationItemSelectedListener {
 
-    private fun sendAndReceiveMsg(message: Message) {
+            drawerLayout.closeDrawers()
 
-        chatViewModel.sendAndReceiveChat(message.chatBotName!!,message.message!!).observe(this, Observer {
+            when (it.itemId) {
 
-            when (it) {
+                R.id.tom -> { userSession = SESSION_TOM }
 
-                is ApiSuccessResponse -> {
+                R.id.bob -> { userSession = SESSION_BOB }
 
-                    if (it.body.success == 1)
-                        updateUI(it.body.message)
+                R.id.harry -> { userSession = SESSION_HARRY }
 
-                    else Toast.makeText(this,it.body.errorMessage, Toast.LENGTH_SHORT).show()
-                }
+                R.id.mark -> { userSession = SESSION_MARK }
 
-                is ApiErrorResponse-> {
-
-                    Toast.makeText(this,it.errorMessage,Toast.LENGTH_SHORT).show()
-                }
             }
-        })
-    }
 
-    private fun updateUI(message : Message?) {
+            chatViewModel.userSessionLd.postValue(userSession)
+            toolbar.title = userSession
 
-        message?.let {
-
-            chatRVAdapter.addItem(it)
-            rvMsg.smoothScrollToPosition(chatRVAdapter.itemCount - 1)
-
+            return@setNavigationItemSelectedListener  true
         }
 
+    }
+
+
+    private fun setupChat() {
+
+        chatViewModel.getUserSession()?.observe(this, Observer {
+
+            Log.d("session","changed with value $it")
+             userSession = it
+             toolbar.title = userSession
+             getChats()
+        })
+    }
+
+
+
+    private fun sendAndReceiveMsg(messageModel: MessageModel) {
+
+        Log.d("SendAndReceive"," in Activity ${messageModel.userSession}")
+        chatViewModel.sendAndReceiveChat(messageModel)
 
     }
+
+    private fun getChats() {
+
+
+//        this.userSession= userSession
+        chatViewModel.chatList.observe(this, Observer {
+
+            Log.d("value changed","$it")
+
+
+            chatRVAdapter.submitList(it)
+
+            Log.d("count","${it.size}")
+            rvMsg.smoothScrollToPosition(it.size -1)
+
+
+        })
+
+          chatViewModel.userSessionLd.observe(this, Observer {
+            userSession = it
+        })
+    }
+
 }

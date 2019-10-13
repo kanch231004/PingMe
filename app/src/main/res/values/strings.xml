@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">PingMe</string>
-    <string name="type_a_message">Type a message</string>
+    <string name="type_a_message">Type a messageModel</string>
+    <string name="tom">Tom</string>
+    <string name="bob">Bob</string>
+    <string name="harry">Harry</string>
+    <string name="opened">opened</string>
+    <string name="closed">closed</string>
+    <string name="mark">Mark</string>
 </resources>
