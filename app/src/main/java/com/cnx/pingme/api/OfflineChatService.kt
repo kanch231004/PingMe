@@ -10,6 +10,11 @@ import retrofit2.http.Query
  * previous versions as work manager is itself executing
  * this call in background so need of couroutine calling this function anymore */
 
+
+/** This apikey value can be changed to show error */
+
+const val apiKeyValue = "6nt5d1nJHkqbkphe"
+
 interface OfflineChatService {
 
     companion object {

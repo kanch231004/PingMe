@@ -62,9 +62,10 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
             if(!TextUtils.isEmpty(etMessage.editableText)) {
 
+
                 val message = MessageModel(UUID.randomUUID().toString(),userSession,
                     CHATBOT_ID, USER_NAME,"",
-                    etMessage.editableText.toString(),true)
+                    etMessage.editableText.toString().trim(),true)
 
                 etMessage.setText("")
                 chatViewModel.sendAndReceiveChat(message)
@@ -124,7 +125,9 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
             chatRVAdapter.submitList(it)
 
             if (it.size > 0)
-            rvMsg.smoothScrollToPosition(it.size -1)
+                rvMsg.smoothScrollToPosition(it.size -1)
+
+
 
 
         })

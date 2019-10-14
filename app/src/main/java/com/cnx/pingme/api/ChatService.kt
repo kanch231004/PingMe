@@ -6,7 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-const val apiKeyValue = "6nt5d1nJHkqbkphe"
 
 /** Not required any more after work manager implementation workmanager is itself doing work in background*/
 

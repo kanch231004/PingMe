@@ -8,6 +8,7 @@
     android:id="@+id/drawer_layout"
     tools:context=".MainActivity">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -31,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
-            android:layout_marginBottom="@dimen/spacing_xlarge"
+            android:layout_above="@id/etMessage"
             android:padding="@dimen/spacing_medium" />
 
 
@@ -55,12 +56,13 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="@dimen/widget_large"
-        android:layout_height="@dimen/widget_large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/etMessage"
         app:layout_constraintTop_toBottomOf="@+id/rvMsg"
         android:src="@drawable/ic_send"
         android:id="@+id/fabSend"
+        app:fabSize="mini"
         android:layout_marginEnd="@dimen/spacing_medium"
         android:layout_marginBottom="@dimen/spacing_medium"
         android:layout_alignParentBottom="true"

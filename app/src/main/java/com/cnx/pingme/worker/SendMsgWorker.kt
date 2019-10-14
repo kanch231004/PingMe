@@ -29,60 +29,85 @@ class SendMsgWorker @Inject constructor(appContext : Context,   workerParameters
 
     override fun doWork(): Result {
 
-        Log.d("Worker"," Executing Work")
-        try {
-
-
-        val msg = inputData.getStringArray(MSG_KEY)
-
+            val msg = inputData.getStringArray(MSG_KEY)
             val externalId = msg?.get(0) ?: ""
             val userSession = msg?.get(1) ?: ""
             val message = msg?.get(2) ?: ""
             val msgId = msg?.get(3)!!
 
-        Log.d("Worker","externalID ${externalId} message ${message} userSession ${userSession} msgId ${msgId}")
-        val response  =  offlineChatService.getChats(externalId,message).execute()
+            try {
+
+                val response = offlineChatService.getChats(externalId, message).execute()
+
+                Log.d("Response ", "${response}")
 
 
-      Log.d("Response ","${response}")
+                if (response.isSuccessful) {
 
 
-        if (response.isSuccessful) {
+                    if (response.body()?.success == 1) {
 
+                        val messagemodel = response.body()?.messageModel
 
-            if (response.body()?.success == 1) {
+                        messagemodel?.let {
 
-            val messagemodel = response.body()?.messageModel
+                            it.userSession = userSession
+                            it.id = UUID.randomUUID().toString()
+                            chatDao.insertChat(it)
+                            messagemodel.isSuccess = true
+                        }
+                    } else {
 
-            messagemodel?.let {
+                        Log.d("Update", "update msgID ${msgId}")
+                        val messageModel = MessageModel(
+                            msgId,
+                            userSession,
+                            CHATBOT_ID,
+                            externalId,
+                            null,
+                            message,
+                            true,
+                            false
+                        )
+                        chatDao.insertChat(messageModel)
+                    }
 
-                it.userSession = userSession
-                it.id = UUID.randomUUID().toString()
-                chatDao.insertChat(it)
-                messagemodel.isSuccess = true
-            }
-        }
+                } else {
 
-            else {
+                    val messageModel = MessageModel(
+                        msgId,
+                        userSession,
+                        CHATBOT_ID,
+                        externalId,
+                        null,
+                        message,
+                        true,
+                        false
+                    )
+                    chatDao.insertChat(messageModel)
+                }
 
-                Log.d("Update","update msgID ${msgId}")
-                val messageModel = MessageModel(msgId,userSession, CHATBOT_ID,externalId,null,message,true,false)
+                return Result.success()
+
+            } catch (e: Exception) {
+
+                val messageModel = MessageModel(
+                    msgId,
+                    userSession,
+                    CHATBOT_ID,
+                    externalId,
+                    null,
+                    message,
+                    true,
+                    false
+                )
                 chatDao.insertChat(messageModel)
+
+
+                e.printStackTrace()
+
             }
 
-        } else {
-
-            val messageModel = MessageModel(msgId,userSession, CHATBOT_ID,externalId,null,message,true,false)
-            chatDao.insertChat(messageModel)
-        }
-
-      return Result.success()
-
-    }  catch (e : Exception) {
-
-            e.printStackTrace()
-
-    }
 
         return Result.failure()
     }
