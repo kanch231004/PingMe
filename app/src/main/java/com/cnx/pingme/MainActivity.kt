@@ -54,7 +54,10 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
         setUpNavigation()
 
-        rvMsg.layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.stackFromEnd = true
+        rvMsg.layoutManager = layoutManager
+
         chatRVAdapter = ChatAdapter()
         rvMsg.adapter = chatRVAdapter
 
@@ -74,6 +77,8 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
 
     }
+
+
 
     private fun setUpNavigation() {
 
@@ -126,9 +131,6 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
             if (it.size > 0)
                 rvMsg.smoothScrollToPosition(it.size -1)
-
-
-
 
         })
 
