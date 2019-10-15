@@ -1,8 +1,10 @@
 package com.cnx.pingme
 
+import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,6 +25,8 @@ import kotlinx.android.synthetic.main.layout_nav_header.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+
+
 
 
 class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
@@ -79,7 +83,6 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
     }
 
 
-
     private fun setUpNavigation() {
 
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -89,6 +92,7 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
+                hideKeyboard()
                 tvSelectedName.text = userSession
             }
 
@@ -137,6 +141,16 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
           chatViewModel.userSessionLd.observe(this, Observer {
             userSession = it
         })
+    }
+
+
+    private fun hideKeyboard() {
+
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
 }
