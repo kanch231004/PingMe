@@ -13,8 +13,8 @@ import com.cnx.pingme.utils.MSG_KEY
 import java.util.*
 import javax.inject.Inject
 
-class SendMsgWorker @Inject constructor(appContext : Context,   workerParameters: WorkerParameters)
-    : Worker(appContext , workerParameters) {
+class SendMsgWorker @Inject constructor(appContext: Context, workerParameters: WorkerParameters) :
+    Worker(appContext, workerParameters) {
 
     init {
         AppInjector.appComponent.injectIntoWorker(this)
@@ -26,54 +26,34 @@ class SendMsgWorker @Inject constructor(appContext : Context,   workerParameters
     @Inject
     lateinit var chatDao: ChatDao
 
-
     override fun doWork(): Result {
 
-            val msg = inputData.getStringArray(MSG_KEY)
-            val externalId = msg?.get(0) ?: ""
-            val userSession = msg?.get(1) ?: ""
-            val message = msg?.get(2) ?: ""
-            val msgId = msg?.get(3)!!
+        val msg = inputData.getStringArray(MSG_KEY)
+        val externalId = msg?.get(0) ?: ""
+        val userSession = msg?.get(1) ?: ""
+        val message = msg?.get(2) ?: ""
+        val msgId = msg?.get(3)!!
 
-            try {
+        try {
+            val response = offlineChatService.getChats(externalId, message).execute()
 
-                val response = offlineChatService.getChats(externalId, message).execute()
+            Log.d("Response ", "${response}")
 
-                Log.d("Response ", "${response}")
+            if (response.isSuccessful) {
+                if (response.body()?.success == 1) {
 
+                    val messagemodel = response.body()?.messageModel
 
-                if (response.isSuccessful) {
+                    messagemodel?.let {
 
-
-                    if (response.body()?.success == 1) {
-
-                        val messagemodel = response.body()?.messageModel
-
-                        messagemodel?.let {
-
-                            it.userSession = userSession
-                            it.id = UUID.randomUUID().toString()
-                            chatDao.insertChat(it)
-                            messagemodel.isSuccess = true
-                        }
-                    } else {
-
-                        Log.d("Update", "update msgID ${msgId}")
-                        val messageModel = MessageModel(
-                            msgId,
-                            userSession,
-                            CHATBOT_ID,
-                            externalId,
-                            null,
-                            message,
-                            true,
-                            false
-                        )
-                        chatDao.insertChat(messageModel)
+                        it.userSession = userSession
+                        it.id = UUID.randomUUID().toString()
+                        chatDao.insertChat(it)
+                        messagemodel.isSuccess = true
                     }
-
                 } else {
 
+                    Log.d("Update", "update msgID ${msgId}")
                     val messageModel = MessageModel(
                         msgId,
                         userSession,
@@ -87,9 +67,7 @@ class SendMsgWorker @Inject constructor(appContext : Context,   workerParameters
                     chatDao.insertChat(messageModel)
                 }
 
-                return Result.success()
-
-            } catch (e: Exception) {
+            } else {
 
                 val messageModel = MessageModel(
                     msgId,
@@ -102,16 +80,26 @@ class SendMsgWorker @Inject constructor(appContext : Context,   workerParameters
                     false
                 )
                 chatDao.insertChat(messageModel)
-
-
-                e.printStackTrace()
-
             }
 
+            return Result.success()
+
+        } catch (e: Exception) {
+
+            val messageModel = MessageModel(
+                msgId,
+                userSession,
+                CHATBOT_ID,
+                externalId,
+                null,
+                message,
+                true,
+                false
+            )
+            chatDao.insertChat(messageModel)
+            e.printStackTrace()
+        }
 
         return Result.failure()
     }
-
-
-
 }

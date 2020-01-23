@@ -18,9 +18,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getChatDao(): ChatDao
 
-
     companion object {
-
         @Volatile
         private var instance: AppDatabase? = null
 

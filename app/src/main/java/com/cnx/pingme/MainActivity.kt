@@ -27,20 +27,19 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
-
-
-class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment>  = dispatchingAndroidInjector
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var drawerLayout : DrawerLayout
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var drawerLayout: DrawerLayout
     private lateinit var chatViewModel: ChatViewModel
-    private  var userSession : String = SESSION_BOB
-    private lateinit var chatRVAdapter : ChatAdapter
+    private var userSession: String = SESSION_BOB
+    private lateinit var chatRVAdapter: ChatAdapter
 
     private var messages = ArrayList<MessageModel>()
 
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         chatViewModel = injectViewModel(viewModelFactory)
         chatViewModel.userSessionLd.postValue(userSession)
@@ -67,12 +65,14 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
         fabSend.setOnClickListener {
 
-            if(!TextUtils.isEmpty(etMessage.editableText)) {
+            if (!TextUtils.isEmpty(etMessage.editableText)) {
 
 
-                val message = MessageModel(UUID.randomUUID().toString(),userSession,
-                    CHATBOT_ID, USER_NAME,"",
-                    etMessage.editableText.toString().trim(),true)
+                val message = MessageModel(
+                    UUID.randomUUID().toString(), userSession,
+                    CHATBOT_ID, USER_NAME, "",
+                    etMessage.editableText.toString().trim(), true
+                )
 
                 etMessage.setText("")
                 chatViewModel.sendAndReceiveChat(message)
@@ -87,8 +87,10 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
-        var actionBarToggle = object : ActionBarDrawerToggle(this
-            ,drawerLayout , toolbar, R.string.opened, R.string.closed) {
+        var actionBarToggle = object : ActionBarDrawerToggle(
+            this
+            , drawerLayout, toolbar, R.string.opened, R.string.closed
+        ) {
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
@@ -107,13 +109,21 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
 
             when (it.itemId) {
 
-                R.id.tom -> { userSession = SESSION_TOM ; ivProfile.setImageResource(R.drawable.pic_tom) }
+                R.id.tom -> {
+                    userSession = SESSION_TOM; ivProfile.setImageResource(R.drawable.pic_tom)
+                }
 
-                R.id.bob -> { userSession = SESSION_BOB ; ivProfile.setImageResource(R.drawable.pic_bob)}
+                R.id.bob -> {
+                    userSession = SESSION_BOB; ivProfile.setImageResource(R.drawable.pic_bob)
+                }
 
-                R.id.jennifer -> { userSession = SESSION_JENNI ; ivProfile.setImageResource(R.drawable.pic_jennifer)}
+                R.id.jennifer -> {
+                    userSession = SESSION_JENNI; ivProfile.setImageResource(R.drawable.pic_jennifer)
+                }
 
-                R.id.mark -> { userSession = SESSION_MARK ; ivProfile.setImageResource(R.drawable.pic_mark)}
+                R.id.mark -> {
+                    userSession = SESSION_MARK; ivProfile.setImageResource(R.drawable.pic_mark)
+                }
 
             }
 
@@ -121,11 +131,10 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
             toolbar.title = userSession
             tvSelectedName.text = userSession
 
-            return@setNavigationItemSelectedListener  true
+            return@setNavigationItemSelectedListener true
         }
 
     }
-
 
     private fun getChats() {
 
@@ -134,15 +143,14 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
             chatRVAdapter.submitList(it)
 
             if (it.size > 0)
-                rvMsg.smoothScrollToPosition(it.size -1)
+                rvMsg.smoothScrollToPosition(it.size - 1)
 
         })
 
-          chatViewModel.userSessionLd.observe(this, Observer {
+        chatViewModel.userSessionLd.observe(this, Observer {
             userSession = it
         })
     }
-
 
     private fun hideKeyboard() {
 
@@ -152,5 +160,4 @@ class MainActivity : AppCompatActivity(),  HasSupportFragmentInjector {
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
-
 }

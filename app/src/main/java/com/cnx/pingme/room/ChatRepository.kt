@@ -16,12 +16,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ChatRepository @Inject constructor(private val chatDao: ChatDao,
-                                         private val workManager: WorkManager) : BaseDataSource() {
+class ChatRepository @Inject constructor(
+    private val chatDao: ChatDao,
+    private val workManager: WorkManager
+) : BaseDataSource() {
 
-
-     fun sendAndReceiveChat(sentMsgModel: MessageModel, coroutineScopeIO: CoroutineScope){
-
+    fun sendAndReceiveChat(sentMsgModel: MessageModel, coroutineScopeIO: CoroutineScope) {
 
         coroutineScopeIO.launch {
 
@@ -29,34 +29,29 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
 
             addRequestInQueue(sentMsgModel)
         }
-
     }
-
 
     fun addRequestInQueue(messageModel: MessageModel) {
 
-        Log.d("Offline","add in request msgId ${messageModel.id}")
+        Log.d("Offline", "add in request msgId ${messageModel.id}")
         createWorkRequest(messageModel)
     }
 
-
     fun insertChat(messageModel: MessageModel?) {
 
-            messageModel?.let {
-                chatDao.insertChat(messageModel)
-       }
+        messageModel?.let {
+            chatDao.insertChat(messageModel)
+        }
     }
-
 
     val config = PagedList.Config.Builder()
         .setPageSize(50)
         .build()
 
-
-    fun getChatList (userSessionLd : LiveData<String>) = Transformations.switchMap(userSessionLd){
+    fun getChatList(userSessionLd: LiveData<String>) = Transformations.switchMap(userSessionLd) {
 
             session ->
-        LivePagedListBuilder(chatDao.getMessageForId(session),config).build()
+        LivePagedListBuilder(chatDao.getMessageForId(session), config).build()
     }
 
     fun createWorkRequest(messageModel: MessageModel) {
@@ -66,25 +61,24 @@ class ChatRepository @Inject constructor(private val chatDao: ChatDao,
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-
-        val stringArray : Array<String> = arrayOf<String>(messageModel.chatBotName!!,
-            messageModel.userSession,messageModel.message!!, messageModel.id!!.toString())
+        val stringArray: Array<String> = arrayOf<String>(
+            messageModel.chatBotName!!,
+            messageModel.userSession, messageModel.message!!, messageModel.id!!.toString()
+        )
 
         val externalId = workDataOf(
-            MSG_KEY to stringArray)
+            MSG_KEY to stringArray
+        )
 
-        Log.d("Worker Sent","externalID ${messageModel.chatBotName} message ${messageModel.message} userSession ${messageModel.userSession}")
+        Log.d(
+            "Worker Sent",
+            "externalID ${messageModel.chatBotName} message ${messageModel.message} userSession ${messageModel.userSession}"
+        )
 
         val sendMsgRequest = OneTimeWorkRequestBuilder<SendMsgWorker>()
-            .setConstraints(constraints).
-
-                setInputData(externalId).build()
-
+            .setConstraints(constraints).setInputData(externalId).build()
 
         workManager.enqueue(sendMsgRequest)
 
-
     }
-
-
 }

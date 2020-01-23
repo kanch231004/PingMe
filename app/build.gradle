@@ -20,6 +20,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        /** Replace with your api_token
+         * eg: Your api token is 6nt5d1nJHkqbkphf
+         * Following line should be replaced by
+         * buildConfigField 'String', 'API_DEVELOPER_TOKEN', "\"6nt5d1nJHkqbkphf\""*/
+
+        buildConfigField 'String', 'API_DEVELOPER_TOKEN', "\"${api_developer_token}\""
     }
     buildTypes {
         release {

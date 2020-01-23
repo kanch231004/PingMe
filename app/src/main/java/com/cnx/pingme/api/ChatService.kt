@@ -19,5 +19,4 @@ interface ChatService {
      suspend fun getChats(@Query("externalID") externalId : String,  @Query("message") message : String,
                   @Query("chatBotID") chatBotID : Int = CHATBOT_ID,@Query("apiKey") apiKey : String = apiKeyValue
                     ) : Response<ChatResponse>
-
 }

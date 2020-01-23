@@ -13,7 +13,6 @@ interface ChatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertChat(chat : MessageModel)
 
-
     @Query("SELECT * From MessageModel Where userSession = :userSess")
     fun getMessageForId(userSess : String) : DataSource.Factory<Int,MessageModel>
 

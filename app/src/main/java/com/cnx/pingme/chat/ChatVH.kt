@@ -9,25 +9,21 @@ import kotlinx.android.synthetic.main.rv_sent_message.view.*
 /** Could be inside adapter class if it is not gonna be used elsewhere */
 
 
-class ChatVH(itemView: View) : RecyclerView.ViewHolder(itemView ) {
+class ChatVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(messageModel : MessageModel) {
+    fun bind(messageModel: MessageModel) {
 
         with(itemView) {
 
-            if(messageModel.isSent) {
-
+            if (messageModel.isSent) {
                 tvMessage.text = messageModel.message
                 tvName.text = messageModel.chatBotName
                 tvFailed.visibility = if (messageModel.isSuccess) View.GONE else View.VISIBLE
-
             } else {
+
                 tvSenderMessage.text = messageModel.message
                 tvSenderName.text = messageModel.userSession
             }
-
         }
-
     }
-
 }

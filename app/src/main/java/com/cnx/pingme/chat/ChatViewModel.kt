@@ -8,22 +8,20 @@ import com.cnx.pingme.room.ChatRepository
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
-class ChatViewModel @Inject constructor(private val chatRepository: ChatRepository,
-                                        @CoroutineScopeIO private val ioCoroutineScope: CoroutineScope
+class ChatViewModel @Inject constructor(
+    private val chatRepository: ChatRepository,
+    @CoroutineScopeIO private val ioCoroutineScope: CoroutineScope
 
-): ViewModel() {
-
+) : ViewModel() {
 
     fun sendAndReceiveChat(messageModel: MessageModel) {
 
-        chatRepository.sendAndReceiveChat(messageModel,ioCoroutineScope)
+        chatRepository.sendAndReceiveChat(messageModel, ioCoroutineScope)
     }
 
-
-    var userSessionLd : MutableLiveData<String> = MutableLiveData()
+    var userSessionLd: MutableLiveData<String> = MutableLiveData()
 
     val chatList = chatRepository.getChatList(userSessionLd)
-
 
 
 }

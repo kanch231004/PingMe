@@ -11,7 +11,7 @@ import dagger.android.HasActivityInjector
 import javax.inject.Inject
 
 
-class PingMeApp  : Application() , HasActivityInjector {
+class PingMeApp : Application(), HasActivityInjector {
 
     @Inject
     public lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
@@ -20,9 +20,8 @@ class PingMeApp  : Application() , HasActivityInjector {
     lateinit var workManager: WorkManager
 
     companion object {
-        var appInstance : PingMeApp? = null
+        var appInstance: PingMeApp? = null
     }
-
 
     override fun onCreate() {
         super.onCreate()
@@ -35,6 +34,5 @@ class PingMeApp  : Application() , HasActivityInjector {
     }
 
     override fun activityInjector() = dispatchingAndroidInjector
-
 
 }
