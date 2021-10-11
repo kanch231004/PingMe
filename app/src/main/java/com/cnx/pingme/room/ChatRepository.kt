@@ -21,14 +21,9 @@ class ChatRepository @Inject constructor(
     private val workManager: WorkManager
 ) : BaseDataSource() {
 
-    fun sendAndReceiveChat(sentMsgModel: MessageModel, coroutineScopeIO: CoroutineScope) {
-
-        coroutineScopeIO.launch {
-
-            insertChat(sentMsgModel)
-
-            addRequestInQueue(sentMsgModel)
-        }
+    suspend fun sendAndReceiveChat(sentMsgModel: MessageModel) {
+        insertChat(sentMsgModel)
+        addRequestInQueue(sentMsgModel)
     }
 
     fun addRequestInQueue(messageModel: MessageModel) {

@@ -8,47 +8,36 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cnx.pingme.api.MessageModel
 import com.cnx.pingme.chat.ChatAdapter
 import com.cnx.pingme.chat.ChatViewModel
-import com.cnx.pingme.dependencyInjection.injectViewModel
 import com.cnx.pingme.utils.*
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_nav_header.*
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var chatViewModel: ChatViewModel
     private var userSession: String = SESSION_BOB
     private lateinit var chatRVAdapter: ChatAdapter
+    private lateinit var chatViewModel: ChatViewModel
 
     private var messages = ArrayList<MessageModel>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        chatViewModel = injectViewModel(viewModelFactory)
+        chatViewModel = ViewModelProvider(this).get(ChatViewModel::class.java)
         chatViewModel.userSessionLd.postValue(userSession)
         getChats()
         setSupportActionBar(toolbar)
@@ -78,8 +67,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 chatViewModel.sendAndReceiveChat(message)
             }
         }
-
-
     }
 
 

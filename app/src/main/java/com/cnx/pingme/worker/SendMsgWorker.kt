@@ -4,9 +4,10 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.cnx.pingme.PingMeApp
 import com.cnx.pingme.api.MessageModel
 import com.cnx.pingme.api.OfflineChatService
-import com.cnx.pingme.dependencyInjection.AppInjector
+import com.cnx.pingme.di.WorkerEntryPoint
 import com.cnx.pingme.room.ChatDao
 import com.cnx.pingme.utils.CHATBOT_ID
 import com.cnx.pingme.utils.MSG_KEY
@@ -15,14 +16,12 @@ import javax.inject.Inject
 
 class SendMsgWorker @Inject constructor(appContext: Context, workerParameters: WorkerParameters) :
     Worker(appContext, workerParameters) {
-
     init {
-        AppInjector.appComponent.injectIntoWorker(this)
+        PingMeApp.appInstance?.component()?.injectIntoWorker(this)
     }
 
     @Inject
     lateinit var offlineChatService: OfflineChatService
-
     @Inject
     lateinit var chatDao: ChatDao
 
@@ -36,7 +35,6 @@ class SendMsgWorker @Inject constructor(appContext: Context, workerParameters: W
 
         try {
             val response = offlineChatService.getChats(externalId, message).execute()
-
             Log.d("Response ", "${response}")
 
             if (response.isSuccessful) {
